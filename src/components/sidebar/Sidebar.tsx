@@ -48,7 +48,7 @@ export default function Sidebar() {
   return (
     <aside className="home-sidebar">
       <section className="home-sidebar-section">
-        <h3 className="home-sidebar-heading">Top Blog Posts</h3>
+        <h3 className="home-sidebar-heading">人気のブログ記事</h3>
         <ol className="home-sidebar-list">
           {topPosts.map((post) => (
             <li key={post.id} className="home-sidebar-item">
@@ -63,7 +63,7 @@ export default function Sidebar() {
       </section>
 
       <section className="home-sidebar-section">
-        <h3 className="home-sidebar-heading">Most Recent Posts</h3>
+        <h3 className="home-sidebar-heading">最新のブログ記事</h3>
         <ol className="home-sidebar-list">
           {recentPosts.map((post) => (
             <li key={post.id} className="home-sidebar-item">

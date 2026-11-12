@@ -3,9 +3,11 @@ import './Header.css';
 export default function Header() {
   return (
     <header className="home-header-banner">
-      <div className="home-header-placeholder">
-        <span>Header Image Placeholder</span>
-      </div>
+      <img 
+        src="/images/header_image.webp" 
+        alt="Office Osamu Fujiwara" 
+        className="home-header-image" 
+      />
     </header>
   );
 }

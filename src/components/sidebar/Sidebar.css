@@ -1,0 +1,44 @@
+/* src/components/sidebar/Sidebar.css */
+
+.home-sidebar {
+  position: sticky;
+  top: 20px; /* Space between the top of the screen and the sidebar when scrolling */
+  align-self: flex-start; /* Crucial: stops the sidebar from stretching to the full page height */
+  
+  /* Styling based on your screenshot */
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  width: 100%;
+}
+
+.home-sidebar-section {
+  margin-bottom: 30px;
+}
+
+.home-sidebar-heading {
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+  text-align: center;
+}
+
+.home-sidebar-list {
+  list-style-position: inside;
+  padding: 0;
+}
+
+.home-sidebar-item {
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+}
+
+.home-sidebar-link {
+  color: #333;
+  text-decoration: none;
+}
+
+.home-sidebar-link:hover {
+  text-decoration: underline;
+}

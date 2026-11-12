@@ -1,6 +1,6 @@
 // src/pages/post/Post.jsx
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom'; // <-- Import Link
+import { useParams, Link } from 'react-router-dom';
 import './Post.css';
 
 export default function Post() {
@@ -53,29 +53,32 @@ export default function Post() {
 
   return (
     <article className="single-post-container">
+      {/* Floating Back Button */}
+      <Link to="/" className="single-post-back-btn">
+        &larr; Back
+      </Link>
+
       {post.featuredMediaUrl && (
         <div className="single-post-hero">
           <img src={post.featuredMediaUrl} alt="Featured" />
         </div>
       )}
       
-      <header className="single-post-header">
-        {/* <-- Add the Back Button Here --> */}
-        <Link to="/" className="single-post-back-btn">
-          &larr; Back
-        </Link>
-
-        <h1 
-          className="single-post-title" 
-          dangerouslySetInnerHTML={{ __html: post.title }} 
+      {/* Applies extra padding at the top if there is no image so text clears the back button */}
+      <div className={`single-post-content ${!post.featuredMediaUrl ? 'no-image' : ''}`}>
+        <header className="single-post-header">
+          <h1 
+            className="single-post-title" 
+            dangerouslySetInnerHTML={{ __html: post.title }} 
+          />
+          <time className="single-post-date">{post.date}</time>
+        </header>
+        
+        <div 
+          className="single-post-body wp-content" 
+          dangerouslySetInnerHTML={{ __html: post.content }} 
         />
-        <time className="single-post-date">{post.date}</time>
-      </header>
-      
-      <div 
-        className="single-post-body wp-content" 
-        dangerouslySetInnerHTML={{ __html: post.content }} 
-      />
+      </div>
     </article>
   );
 }

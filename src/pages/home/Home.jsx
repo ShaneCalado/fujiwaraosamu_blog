@@ -17,18 +17,22 @@ export default function Home() {
         const wpPosts = await response.json();
 
         const formattedPosts = wpPosts.map((post) => {
-          const rawText = post.excerpt?.rendered || post.content?.rendered || '';
-          const cleanExcerpt = rawText.replace(/<[^>]+>/g, '').trim().substring(0, 120) + '...';
+        const rawText = post.excerpt?.rendered || post.content?.rendered || '';
+  
+        const strippedText = rawText.replace(/<[^>]+>/g, '').trim();
+        const cleanExcerpt = strippedText.length > 400 
+          ? strippedText.substring(0, 400) + '...' 
+          : strippedText;
 
-          return {
-            id: post.id,
-            slug: post.slug,
-            title: post.title?.rendered || 'Untitled',
-            excerpt: cleanExcerpt,
-            featuredMediaUrl: post._embedded?.['wp:featuredmedia']?.[0]?.source_url || post.acf?.image || '',
-            date: post.date,
-          };
-        });
+        return {
+          id: post.id,
+          slug: post.slug,
+          title: post.title?.rendered || 'Untitled',
+          excerpt: cleanExcerpt,
+          featuredMediaUrl: post._embedded?.['wp:featuredmedia']?.[0]?.source_url || post.acf?.image || '',
+          date: post.date,
+        };
+      });
 
         setPosts(formattedPosts);
         setIsLoading(false);
@@ -48,15 +52,19 @@ export default function Home() {
       ) : (
         <div className="home-posts-grid">
           {posts.map((post) => (
-            <article key={post.id} className="home-post-card">
+            <article 
+              key={post.id} 
+              className={`home-post-card ${!post.featuredMediaUrl ? 'no-image-card' : ''}`}
+            >
               <Link to={`/post/${post.slug}`} className="home-post-card-link">
-                <div className="home-post-image-placeholder">
-                  {post.featuredMediaUrl ? (
+                
+                {/* Only render this entire block if an image URL exists */}
+                {post.featuredMediaUrl && (
+                  <div className="home-post-image-placeholder">
                     <img src={post.featuredMediaUrl} alt={post.title} />
-                  ) : (
-                    <span>Image Placeholder</span>
-                  )}
-                </div>
+                  </div>
+                )}
+
                 <div className="home-post-card-body">
                   <h2 
                     className="home-post-card-title" 

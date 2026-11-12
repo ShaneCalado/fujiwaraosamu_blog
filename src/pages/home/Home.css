@@ -3,7 +3,7 @@
 .home-container {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 1.5rem;
+  padding: 0; /* Changed from 1.5rem to 0 to remove the top gap */
 }
 
 /* Reserved Top Header Image Space */
@@ -174,4 +174,10 @@
   .home-posts-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* Add to src/pages/home/Home.css */
+
+.home-post-card.no-image-card .home-post-card-excerpt {
+  -webkit-line-clamp: 12; /* Adjust this number if you want more or fewer lines */
 }

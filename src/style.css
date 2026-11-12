@@ -30,7 +30,7 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
+@media () {
   :root {
     --text: #9ca3af;
     --text-h: #f3f4f6;
@@ -161,7 +161,6 @@ code {
   max-width: 100%;
   margin: 0 auto;
   text-align: center;
-  border-inline: 1px solid var(--border);
   min-height: 100svh;
   display: flex;
   flex-direction: column;
@@ -293,4 +292,27 @@ code {
     right: 0;
     border-right-color: var(--border);
   }
+}
+
+.home-content-layout {
+  display: flex;
+  gap: 20px; 
+  align-items: flex-start;
+}
+
+.home-sidebar {
+  /* Keep your existing sticky rules */
+  position: sticky;
+  top: 20px;
+  align-self: flex-start;
+  
+  /* Add these to fix the squishing */
+  width: 180px; /* Adjust this value to get the exact width you want */
+  flex-shrink: 0; /* This strictly prevents flexbox from crushing the sidebar */
+}
+
+.home-posts-main {
+  /* Add this to ensure the main area takes up the remaining available space */
+  flex: 1; 
+  min-width: 0; 
 }
