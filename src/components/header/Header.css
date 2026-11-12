@@ -1,0 +1,275 @@
+/* src/components/Header.css */
+
+/* ==========================================
+   Main Header Container
+========================================== */
+.hdr {
+  position: relative !important;
+  z-index: 100 !important;
+  width: 100% !important;
+  background: #ffffff !important;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1) !important;
+  font-family: "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif !important;
+}
+
+/* ==========================================
+   Top Bar (Catchphrase)
+========================================== */
+.hdr__catchphrase {
+  background-color: #0d47a1 !important; 
+  color: #ffffff !important;
+  padding: 8px 0 !important;
+  font-size: 13px !important;
+  text-align: left !important;
+}
+
+.hdr__catchphrase .container {
+  max-width: 100% !important; /* Stretches to screen edge */
+  width: 100% !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  padding: 0 20px !important;
+}
+
+/* ==========================================
+   Middle Bar (Logo & Nav)
+========================================== */
+.hdr__detail {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important; 
+  align-items: center !important;
+  max-width: 100% !important; /* Removes the 1180px trap */
+  width: 100% !important; /* Forces it to span the entire monitor */
+  box-sizing: border-box !important; /* Keeps padding inside the screen width */
+  margin: 0 !important;
+  padding: 0 20px !important; /* The padding to prevent screen collision */
+  background: #ffffff !important;
+}
+
+/* Logo Sizing Constraint */
+.hdr__logo {
+  flex-shrink: 0 !important;
+  margin: 0 !important;
+  padding: 8px 0 !important; 
+}
+
+.hdr__logo-ttl {
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.hdr__logo-img {
+  max-height: 45px !important; 
+  width: auto !important;
+  display: block !important;
+}
+
+/* Desktop Navigation Menu */
+.hdr__nav {
+  flex-grow: 1 !important;
+  display: flex !important;
+  justify-content: flex-end !important; /* Pushes everything to the right */
+  margin-left: auto !important; 
+}
+
+.ddmenu__list {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+
+.ddmenu__list > li {
+  border-left: 1px solid #e0e0e0 !important;
+  margin: 0 !important;
+}
+
+.ddmenu__list > li:last-child {
+  border-right: 1px solid #e0e0e0 !important;
+}
+
+.ddmenu__list > li > a {
+  color: #333333 !important;
+  text-decoration: none !important;
+  display: block !important;
+  padding: 12px 20px !important; 
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+  transition: all 0.2s ease !important;
+}
+
+.ddmenu__list > li > a:hover {
+  background: #f4f8fb !important;
+  color: #0d47a1 !important;
+}
+
+/* ==========================================
+   Bottom Bar (News/Services List)
+========================================== */
+.hdr-news {
+  background-color: #0d47a1 !important; 
+  color: #ffffff !important;
+  padding: 10px 0 !important;
+  text-align: center !important;
+}
+
+.hdr-news__txtarea {
+  margin: 0 !important;
+  font-size: 14px !important;
+}
+
+/* ==========================================
+   Mobile Overrides
+========================================== */
+.ham-menu-btn {
+  position: absolute !important;
+  right: 20px !important;
+  cursor: pointer !important;
+}
+
+@media screen and (min-width: 1080px) {
+  .ham-menu-btn.is-md {
+    display: none !important;
+  }
+}
+
+@media screen and (max-width: 1080px) {
+  .ddmenu {
+    display: none !important;
+  }
+  .hdr__logo-img {
+    max-height: 35px !important; 
+  }
+  .hdr__detail {
+    padding: 10px 20px !important;
+  }
+}
+
+/* Mobile Hamburger Button Layout */
+.ham-menu-btn__button {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+.ham-menu-btn__icon {
+  font-size: 28px !important;
+  color: #333 !important;
+}
+
+.ham-menu-btn__text {
+  font-size: 10px !important;
+  font-weight: bold !important;
+  color: #333 !important;
+  margin-top: 4px !important;
+}
+
+/* ==========================================
+   Mobile Overlay Menu (.ham-menu)
+========================================== */
+.ham-menu {
+  position: fixed !important;
+  top: 0 !important;
+  z-index: 1000 !important; 
+  width: 100% !important;
+  height: 100% !important;
+  visibility: hidden;
+}
+
+.ham-menu__inner {
+  position: absolute !important;
+  z-index: 20 !important;
+  top: 0 !important;
+  right: 0 !important;
+  height: 100vh !important;
+  width: fit-content !important; /* Shrinks the menu to fit the text */
+  min-width: 240px !important; /* Keeps it wide enough for comfortable tapping */
+  background: #ffffff !important;
+  transform: translateX(100%) !important;
+  opacity: 0 !important;
+  transition: all 0.3s ease-in-out !important;
+  box-sizing: border-box !important;
+}
+
+.ham-menu__nav {
+  width: 100% !important;
+  padding: 80px 0 40px !important; 
+  display: flex !important;
+  flex-direction: column !important;
+  box-sizing: border-box !important;
+}
+
+.ham-menu__bg {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  z-index: 5 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: #000 !important;
+  opacity: 0 !important;
+  visibility: hidden;
+  transition: all 0.3s ease !important;
+}
+
+/* Active states for mobile menu */
+.is-open.ham-menu {
+  visibility: visible !important;
+}
+
+.is-open.ham-menu .ham-menu__inner {
+  transform: translateX(0) !important;
+  overflow-y: auto !important;
+  opacity: 1 !important;
+}
+
+.is-open.ham-menu .ham-menu__bg {
+  opacity: 0.5 !important;
+  visibility: visible !important;
+}
+
+/* Mobile Menu Links */
+.common-nav {
+  list-style: none !important;
+  padding: 0 20px !important; /* Adds padding to the left and right of the text */
+  margin: 0 !important;
+}
+
+.common-nav > li {
+  border-bottom: 1px solid #e0e0e0 !important;
+}
+
+.common-nav > li a {
+  text-decoration: none !important;
+  color: #333333 !important;
+  font-weight: 500 !important;
+  display: block !important;
+  padding: 18px 10px !important; 
+  text-align: left !important; /* Forces left alignment */
+}
+
+/* REMOVES THE BROKEN ICONS */
+.common-nav > li a::after,
+.common-nav > li a::before {
+  display: none !important;
+  content: none !important;
+}
+
+.common-nav > li a:hover {
+  background: #f4f8fb !important;
+  color: #0d47a1 !important;
+}
+
+/* ==========================================
+   Fixed Sticky Header (hidden by default)
+========================================== */
+.hdr-fixed {
+  display: none !important; 
+}
