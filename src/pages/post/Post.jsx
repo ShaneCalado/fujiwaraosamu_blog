@@ -16,8 +16,7 @@ export default function Post() {
       
       try {
         const response = await fetch(
-          `https://dev-fujiwara-wordpress-backend.pantheonsite.io/wp-json/wp/v2/blog_post?slug=${slug}&_embed&t=${Date.now()}`,
-          { cache: 'no-store' }
+          `https://wp-backend.161-33-16-49.sslip.io/wp-json/wp/v2/blog_post?slug=${slug}&_embed&acf_format=standard`
         );
         const wpPosts = await response.json();
 

@@ -11,9 +11,8 @@ export default function Home() {
     const fetchPosts = async () => {
       try {
         const response = await fetch(
-          `https://dev-fujiwara-wordpress-backend.pantheonsite.io/wp-json/wp/v2/blog_post?_embed&t=${Date.now()}`,
-          { cache: 'no-store' }
-        );
+					`https://wp-backend.161-33-16-49.sslip.io/wp-json/wp/v2/blog_post?acf_format=standard`
+				);
         const wpPosts = await response.json();
 
         const formattedPosts = wpPosts.map((post) => {

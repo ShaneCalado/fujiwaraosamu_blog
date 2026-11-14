@@ -280,7 +280,7 @@
   width: 100%;
   height: 250px; /* Adjust this height to match your desired banner size */
   overflow: hidden;
-  border-radius: 8px; /* Optional: rounds the corners of the banner */
+  border-radius: 8px; 
   margin-bottom: 20px;
 }
 
