@@ -62,7 +62,7 @@ export default function Post() {
     fetchSinglePost();
   }, [slug]);
 
-  if (isLoading) return <div className="single-post-loading">Loading post...</div>;
+  if (isLoading) return <div className="single-post-loading">投稿を読み込み中...</div>;
   if (error) return <div className="single-post-error">{error}</div>;
   if (!post) return null;
 
