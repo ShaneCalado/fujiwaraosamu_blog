@@ -9,6 +9,7 @@ interface Post {
   title: string;
   date: string;
   isTopPost: boolean;
+  listPosition: number | null;
 }
 
 export default function Sidebar() {
@@ -25,13 +26,21 @@ export default function Sidebar() {
         );
         const wpPosts = await response.json();
 
-        const formattedPosts = wpPosts.map((post: any) => ({
-          id: post.id,
-          slug: post.slug,
-          title: post.title?.rendered || 'Untitled',
-          date: post.date,
-          isTopPost: !!post.acf?.on_top_post_list,
-        }));
+        const formattedPosts = wpPosts.map((post: any) => {
+          const rawPos =
+            post.acf?.['リスト上の位置list_position'] ?? post.acf?.list_position;
+          const parsedPos = rawPos ? parseInt(String(rawPos), 10) : null;
+
+          return {
+            id: post.id,
+            slug: post.slug,
+            title: post.title?.rendered || 'Untitled',
+            date: post.date,
+            isTopPost: !!post.acf?.on_top_post_list,
+            listPosition:
+              parsedPos && parsedPos >= 1 && parsedPos <= 5 ? parsedPos : null,
+          };
+        });
 
         setPosts(formattedPosts);
       } catch (error) {
@@ -48,7 +57,6 @@ export default function Sidebar() {
 
     const updateTabPosition = () => {
       if (!anchorRef.current) return;
-      // Measure the parent content wrapper's top so it works even in column layouts
       const parentRect = anchorRef.current.parentElement?.getBoundingClientRect() 
         || anchorRef.current.getBoundingClientRect();
       setTabTop(Math.max(MIN_TOP, parentRect.top));
@@ -63,10 +71,31 @@ export default function Sidebar() {
     };
   }, []);
 
-  const topPosts = posts.filter((post) => post.isTopPost).slice(0, 5);
-  const recentPosts = [...posts]
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, 5);
+  // Lock background page scroll on mobile when the drawer is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
+  // 1. Pre-sort all posts newest-first
+  const postsByNewest = [...posts].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
+
+  // 2. For each slot 1..5, pick the most recent post assigned to that position
+  const topCandidates = postsByNewest.filter((post) => post.isTopPost);
+  const topPosts = [1, 2, 3, 4, 5]
+    .map((pos) => topCandidates.find((post) => post.listPosition === pos))
+    .filter((post): post is Post => Boolean(post));
+
+  // 3. Most recent 5 posts overall
+  const recentPosts = postsByNewest.slice(0, 5);
 
   const closeSidebar = () => setIsOpen(false);
 

@@ -4,10 +4,10 @@
   background-color: #fff; 
   border-radius: 8px;
   overflow: hidden; 
-  position: relative; /* Essential for the absolute back button to anchor to the top-left */
+  position: relative;
 }
 
-/* Back Button floating over image */
+/* Back Button floating over image/video */
 .single-post-back-btn {
   position: absolute;
   top: 16px;
@@ -18,9 +18,9 @@
   font-weight: 600;
   font-size: 0.95rem;
   padding: 8px 12px;
-  background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
+  background-color: rgba(255, 255, 255, 0.9);
   border-radius: 6px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle drop shadow for contrast */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease;
 }
 
@@ -40,11 +40,83 @@
   display: block;
 }
 
+/* Playable 16:9 Video Hero Container */
+.single-post-video-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: 440px;
+  background-color: #000;
+  overflow: hidden;
+}
+
+.single-post-video-facade {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: block;
+}
+
+.single-post-video-facade img {
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.single-post-video-facade:hover img {
+  transform: scale(1.02);
+  filter: brightness(0.9);
+}
+
+/* Centered Play Button Overlay */
+.single-post-play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 68px;
+  height: 48px;
+  background-color: rgba(20, 20, 20, 0.82);
+  border-radius: 12px;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.single-post-video-facade:hover .single-post-play-btn {
+  background-color: #ff0000;
+  transform: translate(-50%, -50%) scale(1.06);
+}
+
+/* Play Triangle Icon */
+.single-post-play-btn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-40%, -50%);
+  border-style: solid;
+  border-width: 10px 0 10px 18px;
+  border-color: transparent transparent transparent #ffffff;
+}
+
+.single-post-video-iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
 .single-post-content {
   padding: 24px;
 }
 
-/* Pushes the text down if there is no image, so it doesn't collide with the back button */
+/* Pushes the text down if there is no image or video, so it doesn't collide with the back button */
 .single-post-content.no-image {
   padding-top: 70px; 
 }
@@ -86,4 +158,25 @@
 .single-post-error {
   padding: 40px;
   text-align: center;
+}
+
+/* Constrain inline WordPress images, figures, and embeds */
+.single-post-body figure,
+.single-post-body .wp-block-image {
+  max-width: 100%;
+  margin: 1.5em 0;
+  box-sizing: border-box;
+}
+
+.single-post-body img {
+  max-width: 100%;
+  height: auto !important; /* Overrides WordPress's inline height="..." attribute so aspect ratio stays intact */
+  display: block;
+  margin: 0 auto;
+  border-radius: 6px;
+}
+
+.single-post-body iframe,
+.single-post-body video {
+  max-width: 100%;
 }

@@ -3,6 +3,15 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Home.css';
 
+// Extracts the 11-character YouTube ID from watch?v=, youtu.be/, embed/, or shorts/ links
+function getYouTubeThumbnail(url) {
+  if (!url || typeof url !== 'string') return '';
+  const match = url.match(
+    /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+  );
+  return match ? `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg` : '';
+}
+
 export default function Home() {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -11,27 +20,35 @@ export default function Home() {
     const fetchPosts = async () => {
       try {
         const response = await fetch(
-					`https://wp-backend.161-33-16-49.sslip.io/wp-json/wp/v2/blog_post?acf_format=standard`
-				);
+          `https://wp-backend.161-33-16-49.sslip.io/wp-json/wp/v2/blog_post?_embed&acf_format=standard`
+        );
         const wpPosts = await response.json();
 
         const formattedPosts = wpPosts.map((post) => {
-        const rawText = post.excerpt?.rendered || post.content?.rendered || '';
-  
-        const strippedText = rawText.replace(/<[^>]+>/g, '').trim();
-        const cleanExcerpt = strippedText.length > 400 
-          ? strippedText.substring(0, 400) + '...' 
-          : strippedText;
+          // 1. Prioritize ACF preview_text, otherwise fall back to WP excerpt or content
+          const acfPreview = post.acf?.preview_text?.trim();
+          const rawText = acfPreview || post.excerpt?.rendered || post.content?.rendered || '';
+          const strippedText = rawText.replace(/<[^>]+>/g, '').trim();
+          const cleanExcerpt = strippedText.length > 160 
+            ? strippedText.substring(0, 160) + '...' 
+            : strippedText;
 
-        return {
-          id: post.id,
-          slug: post.slug,
-          title: post.title?.rendered || 'Untitled',
-          excerpt: cleanExcerpt,
-          featuredMediaUrl: post._embedded?.['wp:featuredmedia']?.[0]?.source_url || post.acf?.image || '',
-          date: post.date,
-        };
-      });
+          // 2. Prioritize ACF main_image or WP Featured Image, then fall back to YouTube thumbnail
+          const imageUrl =
+            (typeof post.acf?.main_image === 'string' && post.acf.main_image) ||
+            post._embedded?.['wp:featuredmedia']?.[0]?.source_url ||
+            '';
+          const videoThumbnailUrl = getYouTubeThumbnail(post.acf?.video_link);
+
+          return {
+            id: post.id,
+            slug: post.slug,
+            title: post.title?.rendered || 'Untitled',
+            excerpt: cleanExcerpt,
+            featuredMediaUrl: imageUrl || videoThumbnailUrl || '',
+            date: post.date,
+          };
+        });
 
         setPosts(formattedPosts);
         setIsLoading(false);
@@ -47,7 +64,7 @@ export default function Home() {
   return (
     <div className="home-container">
       {isLoading ? (
-        <div className="home-loading">Loading posts...</div>
+        <div className="home-loading">投稿を読み込み中...</div>
       ) : (
         <div className="home-posts-grid">
           {posts.map((post) => (
@@ -56,8 +73,6 @@ export default function Home() {
               className={`home-post-card ${!post.featuredMediaUrl ? 'no-image-card' : ''}`}
             >
               <Link to={`/post/${post.slug}`} className="home-post-card-link">
-                
-                {/* Only render this entire block if an image URL exists */}
                 {post.featuredMediaUrl && (
                   <div className="home-post-image-placeholder">
                     <img src={post.featuredMediaUrl} alt={post.title} />
