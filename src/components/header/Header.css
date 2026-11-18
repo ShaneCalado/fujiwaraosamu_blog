@@ -313,7 +313,7 @@
   font-size: 3.5rem;
   font-weight: 700;
   color: #ffffff;
-  background-color: rgba(68, 86, 112, 0.85);
+  background-color: rgba(68, 86, 112, 0.35);
   border-radius: 0 12px 0 0;
   letter-spacing: 0.05em;
   line-height: 1.15;
@@ -418,10 +418,13 @@
   }
 
   .home-header-title {
-    bottom: 0;
+    top: 0;
+    bottom: auto;
     left: 0;
-    font-size: 1.15rem;
+    font-size: 1.5rem;
     padding: 6px 14px;
+    border-radius: 0 0 12px 0; /* Rounds the bottom-right corner on mobile */
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
   }
 
   .home-header-contact-toggle {
