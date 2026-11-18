@@ -1,6 +1,6 @@
 /* src/components/sidebar/Sidebar.css */
 
-/* Shared flex layout so sections & items scale vertically to fit without scrolling */
+/* Shared flex layout so sections split the full sidebar height 50/50 */
 .home-sidebar-inner {
   display: flex;
   flex-direction: column;
@@ -25,7 +25,7 @@
 
 .home-sidebar-heading {
   font-size: clamp(0.95rem, 1.8svh, 1.1rem);
-  margin: 0 0 10px 0;
+  margin: 0 0 10px 0 !important;
   border-bottom: 1px solid #eee;
   padding-bottom: 8px;
   text-align: center;
@@ -35,19 +35,23 @@
 
 .home-sidebar-list {
   list-style-position: inside;
-  padding: 0;
-  margin: 0;
+  padding: 0 0 0 16px !important; /* Left padding to indent the list nicely */
+  margin: 0 !important;
+  text-align: left !important; /* Forces all numbered entries to align on the left */
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: flex-start !important;
+  gap: 8px !important;
   flex: 1;
   min-height: 0;
 }
 
 .home-sidebar-item {
-  margin: 0;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: left !important;
   font-size: clamp(0.8rem, 1.6svh, 0.95rem);
-  line-height: 1.3;
+  line-height: 1.35;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

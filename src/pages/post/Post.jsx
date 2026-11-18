@@ -111,7 +111,7 @@ export default function Post() {
             onClick={() => setIsTocOpen((prev) => !prev)}
             aria-expanded={isTocOpen}
           >
-            <span className="single-post-toc-label">目次 (Table of Contents)</span>
+            <span className="single-post-toc-label">目次 (クリックして展開)</span>
             <span className="single-post-toc-chevron">{isTocOpen ? '▲' : '▼'}</span>
           </button>
 

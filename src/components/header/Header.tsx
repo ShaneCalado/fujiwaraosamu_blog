@@ -1,13 +1,86 @@
+import { useState } from 'react';
 import './Header.css';
 
 export default function Header() {
+  const [isContactOpen, setIsContactOpen] = useState(false);
+
+  const toggleContact = () => setIsContactOpen((prev) => !prev);
+
   return (
-    <header className="home-header-banner">
-      <img 
-        src="/images/header_image.webp" 
-        alt="Office Osamu Fujiwara" 
-        className="home-header-image" 
-      />
+    <header className="home-header-wrapper">
+      <div
+        className="home-header-banner"
+        onClick={toggleContact}
+        role="button"
+        tabIndex={0}
+        aria-expanded={isContactOpen}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggleContact();
+          }
+        }}
+      >
+        <img 
+          src="/images/header_image.webp" 
+          alt="Office Osamu Fujiwara" 
+          className="home-header-image" 
+        />
+        <h1 className="home-header-title">宝塚の行政書士ブログ</h1>
+      </div>
+
+      {/* Collapsible Contact Drawer attached flush to the bottom of the banner */}
+      <div className={`home-header-contact ${isContactOpen ? 'is-open' : ''}`}>
+        <button
+          type="button"
+          className="home-header-contact-toggle"
+          onClick={toggleContact}
+          aria-expanded={isContactOpen}
+          aria-label="お問い合わせ・関連サイトを開閉"
+        >
+          <span className="home-header-contact-chevron">{isContactOpen ? '▲' : '▼'}</span>
+        </button>
+
+        <div className="home-header-contact-drawer">
+          <div className="home-header-contact-drawer-inner">
+            <div className="home-header-contact-content">
+              <div className="home-header-contact-item">
+                <span className="home-header-contact-heading">事務所名</span>
+                <span className="home-header-contact-value">宝塚の行政書士</span>
+              </div>
+
+              <div className="home-header-contact-item">
+                <span className="home-header-contact-heading">電話番号</span>
+                <a href="tel:0000-00-0000" className="home-header-contact-link">
+                  0000-00-0000
+                </a>
+              </div>
+
+              <div className="home-header-contact-item">
+                <span className="home-header-contact-heading">関連ウェブサイト</span>
+                <div className="home-header-contact-links">
+                  <a
+                    href="https://takarazuka-shukatsu.jp/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="home-header-contact-link"
+                  >
+                    https://takarazuka-shukatsu.jp/
+                  </a>
+                  <a
+                    href="https://office-fujiwaraosamu.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="home-header-contact-link"
+                  >
+                    https://office-fujiwaraosamu.com/
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </header>
   );
 }
