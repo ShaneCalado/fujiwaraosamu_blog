@@ -1,54 +1,40 @@
 // src/components/sidebar/Sidebar.tsx
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { fetchAllBlogPosts } from '../../api/blogApi';
 import './Sidebar.css';
 
-interface Post {
+interface SidebarPost {
   id: number;
   slug: string;
   title: string;
-  date: string;
+  rawDate: string;
   isTopPost: boolean;
   listPosition: number | null;
 }
 
 export default function Sidebar() {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<SidebarPost[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [tabTop, setTabTop] = useState(140);
   const anchorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const fetchSidebarPosts = async () => {
-      try {
-        const response = await fetch(
-          `https://wp-backend.161-33-16-49.sslip.io/wp-json/wp/v2/blog_post?acf_format=standard`
-        );
-        const wpPosts = await response.json();
+    let isMounted = true;
 
-        const formattedPosts = wpPosts.map((post: any) => {
-          const rawPos =
-            post.acf?.['リスト上の位置list_position'] ?? post.acf?.list_position;
-          const parsedPos = rawPos ? parseInt(String(rawPos), 10) : null;
-
-          return {
-            id: post.id,
-            slug: post.slug,
-            title: post.title?.rendered || 'Untitled',
-            date: post.date,
-            isTopPost: !!post.acf?.on_top_post_list,
-            listPosition:
-              parsedPos && parsedPos >= 1 && parsedPos <= 5 ? parsedPos : null,
-          };
-        });
-
-        setPosts(formattedPosts);
-      } catch (error) {
+    fetchAllBlogPosts()
+      .then((fetchedPosts) => {
+        if (isMounted) {
+          setPosts(fetchedPosts);
+        }
+      })
+      .catch((error) => {
         console.error('Failed to fetch sidebar posts:', error);
-      }
-    };
+      });
 
-    fetchSidebarPosts();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // Keep mobile tab aligned with the content start, then clamped at MIN_TOP when scrolling down
@@ -57,8 +43,9 @@ export default function Sidebar() {
 
     const updateTabPosition = () => {
       if (!anchorRef.current) return;
-      const parentRect = anchorRef.current.parentElement?.getBoundingClientRect() 
-        || anchorRef.current.getBoundingClientRect();
+      const parentRect =
+        anchorRef.current.parentElement?.getBoundingClientRect() ||
+        anchorRef.current.getBoundingClientRect();
       setTabTop(Math.max(MIN_TOP, parentRect.top));
     };
 
@@ -83,16 +70,16 @@ export default function Sidebar() {
     };
   }, [isOpen]);
 
-  // 1. Pre-sort all posts newest-first
+  // 1. Pre-sort all posts newest-first using the ISO rawDate
   const postsByNewest = [...posts].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    (a, b) => new Date(b.rawDate).getTime() - new Date(a.rawDate).getTime()
   );
 
   // 2. For each slot 1..5, pick the most recent post assigned to that position
   const topCandidates = postsByNewest.filter((post) => post.isTopPost);
   const topPosts = [1, 2, 3, 4, 5]
     .map((pos) => topCandidates.find((post) => post.listPosition === pos))
-    .filter((post): post is Post => Boolean(post));
+    .filter((post): post is SidebarPost => Boolean(post));
 
   // 3. Most recent 5 posts overall
   const recentPosts = postsByNewest.slice(0, 5);

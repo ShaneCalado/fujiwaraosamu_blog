@@ -1,65 +1,44 @@
 // src/pages/post/Post.jsx
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { fetchSingleBlogPostBySlug } from '../../api/blogApi';
 import './Post.css';
-
-function getYouTubeId(url) {
-  if (!url || typeof url !== 'string') return '';
-  const match = url.match(
-    /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
-  );
-  return match ? match[1] : '';
-}
 
 export default function Post() {
   const { slug } = useParams();
   const [post, setPost] = useState(null);
   const [isPlayingVideo, setIsPlayingVideo] = useState(false);
+  const [isTocOpen, setIsTocOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchSinglePost = async () => {
-      setIsLoading(true);
-      setError(null);
-      setIsPlayingVideo(false);
-      
-      try {
-        const response = await fetch(
-          `https://wp-backend.161-33-16-49.sslip.io/wp-json/wp/v2/blog_post?slug=${slug}&_embed&acf_format=standard`
-        );
-        const wpPosts = await response.json();
+    let isMounted = true;
+    setIsLoading(true);
+    setError(null);
+    setIsPlayingVideo(false);
+    setIsTocOpen(false);
 
-        if (wpPosts.length === 0) {
+    fetchSingleBlogPostBySlug(slug)
+      .then((postData) => {
+        if (!isMounted) return;
+        if (!postData) {
           setError('Post not found.');
-          setIsLoading(false);
-          return;
+        } else {
+          setPost(postData);
         }
-
-        const data = wpPosts[0];
-        const videoId = getYouTubeId(data.acf?.video_link);
-        const imageUrl =
-          (typeof data.acf?.main_image === 'string' && data.acf.main_image) ||
-          data._embedded?.['wp:featuredmedia']?.[0]?.source_url ||
-          '';
-        
-        setPost({
-          id: data.id,
-          title: data.title?.rendered || 'Untitled',
-          content: data.content?.rendered || '',
-          date: new Date(data.date).toLocaleDateString(),
-          videoId,
-          featuredMediaUrl: imageUrl,
-        });
-      } catch (err) {
+      })
+      .catch((err) => {
         console.error('Failed to fetch the post:', err);
-        setError('Failed to load post.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
+        if (isMounted) setError('Failed to load post.');
+      })
+      .finally(() => {
+        if (isMounted) setIsLoading(false);
+      });
 
-    fetchSinglePost();
+    return () => {
+      isMounted = false;
+    };
   }, [slug]);
 
   if (isLoading) return <div className="single-post-loading">投稿を読み込み中...</div>;
@@ -67,12 +46,21 @@ export default function Post() {
   if (!post) return null;
 
   const hasHeroMedia = Boolean(post.videoId || post.featuredMediaUrl);
+  const hasToc = post.toc && post.toc.length > 0;
+
+  const handleTocClick = (e, id) => {
+    e.preventDefault();
+    const target = document.getElementById(id);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   return (
     <article className="single-post-container">
       {/* Floating Back Button */}
       <Link to="/" className="single-post-back-btn">
-        &larr; 
+        &larr;
       </Link>
 
       {/* Video takes priority over static image */}
@@ -108,20 +96,62 @@ export default function Post() {
           </div>
         )
       )}
-      
-      {/* Applies extra padding at the top if there is no video or image so text clears the back button */}
-      <div className={`single-post-content ${!hasHeroMedia ? 'no-image' : ''}`}>
+
+      {/* Collapsible Table of Contents: expands out from bottom of hero media, or sits at top of post if no media */}
+      {hasToc && (
+        <nav
+          className={`single-post-toc ${hasHeroMedia ? 'attached-to-hero' : 'no-hero-media'} ${
+            isTocOpen ? 'is-open' : ''
+          }`}
+          aria-label="目次"
+        >
+          <button
+            type="button"
+            className="single-post-toc-toggle"
+            onClick={() => setIsTocOpen((prev) => !prev)}
+            aria-expanded={isTocOpen}
+          >
+            <span className="single-post-toc-label">目次 (Table of Contents)</span>
+            <span className="single-post-toc-chevron">{isTocOpen ? '▲' : '▼'}</span>
+          </button>
+
+          <div className="single-post-toc-drawer">
+            <div className="single-post-toc-drawer-inner">
+              <ol className="single-post-toc-list">
+                {post.toc.map((item) => (
+                  <li
+                    key={item.id}
+                    className={`single-post-toc-item level-${item.level}`}
+                    style={{ paddingLeft: `${item.indent * 20}px` }}
+                  >
+                    <a
+                      href={`#${item.id}`}
+                      className="single-post-toc-link"
+                      onClick={(e) => handleTocClick(e, item.id)}
+                    >
+                      {`${item.sectionNumber} - ${item.text}`}
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        </nav>
+      )}
+
+      {/* Applies extra padding at the top only if there is neither hero media nor a TOC */}
+      <div className={`single-post-content ${!hasHeroMedia && !hasToc ? 'no-image' : ''}`}>
         <header className="single-post-header">
-          <h1 
-            className="single-post-title" 
-            dangerouslySetInnerHTML={{ __html: post.title }} 
+          <h1
+            className="single-post-title"
+            dangerouslySetInnerHTML={{ __html: post.title }}
           />
           <time className="single-post-date">{post.date}</time>
         </header>
-        
-        <div 
-          className="single-post-body wp-content" 
-          dangerouslySetInnerHTML={{ __html: post.content }} 
+
+        <div
+          className="single-post-body wp-content"
+          dangerouslySetInnerHTML={{ __html: post.content }}
         />
       </div>
     </article>
