@@ -1,12 +1,15 @@
 // src/pages/home/Home.jsx
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { fetchAllBlogPosts } from '../../api/blogApi';
 import './Home.css';
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [searchParams] = useSearchParams();
+
+  const selectedTag = searchParams.get('tag') || '';
 
   useEffect(() => {
     let isMounted = true;
@@ -28,13 +31,19 @@ export default function Home() {
     };
   }, []);
 
+  const visiblePosts = selectedTag
+    ? posts.filter((post) => post.tags?.includes(selectedTag))
+    : posts;
+
   return (
     <div className="home-container">
       {isLoading ? (
         <div className="home-loading">投稿を読み込み中...</div>
+      ) : visiblePosts.length === 0 ? (
+        <div className="home-loading">該当する投稿がありません。</div>
       ) : (
         <div className="home-posts-grid">
-          {posts.map((post) => (
+          {visiblePosts.map((post) => (
             <article
               key={post.id}
               className={`home-post-card ${!post.featuredMediaUrl ? 'no-image-card' : ''}`}

@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { fetchSingleBlogPostBySlug } from '../../api/blogApi';
+import PostContactCta from '../../components/contact/Contact';
 import './Post.css';
 
 export default function Post() {
@@ -48,6 +49,14 @@ export default function Post() {
   const hasHeroMedia = Boolean(post.videoId || post.featuredMediaUrl);
   const hasToc = post.toc && post.toc.length > 0;
 
+  // Normalize contact_link whether blogApi maps it to post.contactLink or leaves it on post.acf
+  const rawContactLink = post.contactLink ?? post.acf?.contact_link;
+  const contactLinkId =
+    typeof rawContactLink === 'object' && rawContactLink !== null
+      ? Number(rawContactLink.value) || 0
+      : Number(rawContactLink) || 0;
+  const hasContactCta = contactLinkId > 0;
+
   const handleTocClick = (e, id) => {
     e.preventDefault();
     const target = document.getElementById(id);
@@ -60,7 +69,7 @@ export default function Post() {
     <article className="single-post-container">
       {/* Floating Back Button */}
       <Link to="/" className="single-post-back-btn">
-        &larr;
+        ←
       </Link>
 
       {/* Video takes priority over static image */}
@@ -153,6 +162,8 @@ export default function Post() {
           className="single-post-body wp-content"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
+
+        {hasContactCta && <PostContactCta contactLink={contactLinkId} />}
       </div>
     </article>
   );

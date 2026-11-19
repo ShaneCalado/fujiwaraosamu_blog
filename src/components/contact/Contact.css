@@ -1,0 +1,67 @@
+/* src/components/contact-cta/PostContactCta.css */
+
+.post-contact-cta {
+  margin-top: 2.5rem;
+  padding: 1.5rem;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.post-contact-cta__heading {
+  margin: 0 0 0.6rem 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.4;
+}
+
+.post-contact-cta__description {
+  margin: 0 0 1.25rem 0;
+  font-size: 0.95rem;
+  color: #4b5563;
+  line-height: 1.6;
+  white-space: pre-line; /* Allows \n line breaks inside CONTACT_PRESETS strings */
+}
+
+.post-contact-cta__button {
+  display: block;
+  width: 100%;
+  padding: 0.9rem 1.25rem;
+  background-color: #e9eef3;
+  color: #111827;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 10px;
+  box-sizing: border-box;
+  transition: background-color 0.18s ease, transform 0.12s ease;
+}
+
+.post-contact-cta__button:hover {
+  background-color: #dce4ec;
+  color: #0d47a1;
+}
+
+.post-contact-cta__button:active {
+  transform: translateY(1px);
+}
+
+@media (max-width: 768px) {
+  .post-contact-cta {
+    margin-top: 2rem;
+    padding: 1.25rem;
+  }
+
+  .post-contact-cta__heading {
+    font-size: 1.05rem;
+  }
+
+  .post-contact-cta__description {
+    font-size: 0.9rem;
+  }
+}

@@ -29,6 +29,33 @@ function getPrimaryImageUrl(wpPost) {
   return wpPost._embedded?.['wp:featuredmedia']?.[0]?.source_url || '';
 }
 
+// Shared helper: Normalizes ACF contact_link into 0, 1, 2, etc.
+function parseContactLink(raw) {
+  if (!raw) return 0;
+  const val = typeof raw === 'object' && 'value' in raw ? raw.value : raw;
+  const parsed = Number(val);
+  if (!Number.isNaN(parsed)) return parsed;
+
+  if (val === 'office-fujiwaraosamu') return 1;
+  if (val === 'takarazuka-shukatsu') return 2;
+  return 0;
+}
+
+// Shared helper: Normalizes ACF tag field into an array of strings, ignoring "-"
+function parsePostTags(rawTag) {
+  if (!rawTag) return [];
+  const rawList = Array.isArray(rawTag) ? rawTag : [rawTag];
+  return rawList
+    .map((item) => {
+      if (!item) return '';
+      if (typeof item === 'object') {
+        return String(item.label ?? item.value ?? '').trim();
+      }
+      return String(item).trim();
+    })
+    .filter((tag) => Boolean(tag) && tag !== '-' && tag !== 'ー' && tag !== '－');
+}
+
 // Shared helper: Parses HTML string, strips inline formatting for TOC, and injects IDs into h2-h6
 export function extractTocAndInjectIds(htmlString) {
   if (!htmlString) return { contentWithIds: '', tocItems: [] };
@@ -134,6 +161,8 @@ export async function fetchAllBlogPosts(forceRefresh = false) {
           isTopPost: Boolean(post.acf?.on_top_post_list),
           listPosition:
             parsedPos && parsedPos >= 1 && parsedPos <= 5 ? parsedPos : null,
+          contactLink: parseContactLink(post.acf?.contact_link),
+          tags: parsePostTags(post.acf?.tag),
           acf: post.acf || {},
         };
       });
@@ -176,5 +205,8 @@ export async function fetchSingleBlogPostBySlug(slug) {
     date: new Date(data.date).toLocaleDateString(),
     videoId,
     featuredMediaUrl: imageUrl,
+    contactLink: parseContactLink(data.acf?.contact_link),
+    tags: parsePostTags(data.acf?.tag),
+    acf: data.acf || {},
   };
 }

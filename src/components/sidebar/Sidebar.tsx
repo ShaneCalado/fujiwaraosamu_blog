@@ -1,6 +1,6 @@
 // src/components/sidebar/Sidebar.tsx
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams, useLocation, useNavigate } from 'react-router-dom';
 import { fetchAllBlogPosts } from '../../api/blogApi';
 import './Sidebar.css';
 
@@ -11,6 +11,7 @@ interface SidebarPost {
   rawDate: string;
   isTopPost: boolean;
   listPosition: number | null;
+  tags?: string[];
 }
 
 export default function Sidebar() {
@@ -18,6 +19,12 @@ export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const [tabTop, setTabTop] = useState(140);
   const anchorRef = useRef<HTMLDivElement>(null);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const selectedTag = searchParams.get('tag') || '';
 
   useEffect(() => {
     let isMounted = true;
@@ -39,7 +46,7 @@ export default function Sidebar() {
 
   // Keep mobile tab aligned with the content start, then clamped at MIN_TOP when scrolling down
   useEffect(() => {
-    const MIN_TOP = 140; // Distance from top of phone screen when scrolling down
+    const MIN_TOP = 140;
 
     const updateTabPosition = () => {
       if (!anchorRef.current) return;
@@ -75,16 +82,36 @@ export default function Sidebar() {
     (a, b) => new Date(b.rawDate).getTime() - new Date(a.rawDate).getTime()
   );
 
-  // 2. For each slot 1..5, pick the most recent post assigned to that position
+  // 2. Collect unique tags across all posts
+  const availableTags = Array.from(
+    new Set(postsByNewest.flatMap((post) => post.tags || []))
+  );
+
+  // 3. For each slot 1..5, pick the most recent post assigned to that position
   const topCandidates = postsByNewest.filter((post) => post.isTopPost);
   const topPosts = [1, 2, 3, 4, 5]
     .map((pos) => topCandidates.find((post) => post.listPosition === pos))
     .filter((post): post is SidebarPost => Boolean(post));
 
-  // 3. Most recent 5 posts overall
+  // 4. Most recent 5 posts overall
   const recentPosts = postsByNewest.slice(0, 5);
 
   const closeSidebar = () => setIsOpen(false);
+
+  const handleTagSelect = (tag: string) => {
+    // Clicking the already-active tag toggles it off (shows all posts)
+    const nextTag = selectedTag === tag ? '' : tag;
+
+    if (location.pathname !== '/') {
+      navigate(nextTag ? `/?tag=${encodeURIComponent(nextTag)}` : '/');
+    } else if (nextTag) {
+      setSearchParams({ tag: nextTag }, { replace: true });
+    } else {
+      setSearchParams({}, { replace: true });
+    }
+
+    closeSidebar();
+  };
 
   return (
     <div ref={anchorRef} className="home-sidebar-anchor">
@@ -109,6 +136,31 @@ export default function Sidebar() {
         </div>
 
         <div className="home-sidebar-inner">
+          {availableTags.length > 0 && (
+            <section className="home-sidebar-section home-sidebar-section--tags">
+              <h3 className="home-sidebar-heading">タグで絞り込む</h3>
+              <div className="sidebar-tag-list">
+                <button
+                  type="button"
+                  className={`sidebar-tag-btn ${!selectedTag ? 'is-active' : ''}`}
+                  onClick={() => handleTagSelect('')}
+                >
+                  すべて
+                </button>
+                {availableTags.map((tag) => (
+                  <button
+                    key={tag}
+                    type="button"
+                    className={`sidebar-tag-btn ${selectedTag === tag ? 'is-active' : ''}`}
+                    onClick={() => handleTagSelect(tag)}
+                  >
+                    {tag}
+                  </button>
+                ))}
+              </div>
+            </section>
+          )}
+
           <section className="home-sidebar-section">
             <h3 className="home-sidebar-heading">人気のブログ記事</h3>
             <ol className="home-sidebar-list">
