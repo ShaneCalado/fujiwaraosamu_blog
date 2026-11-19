@@ -1,11 +1,10 @@
 /* src/components/sidebar/Sidebar.css */
 
-/* Evenly space all sections across the sidebar height */
 .home-sidebar-inner {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 20px;
+  justify-content: flex-start;
+  gap: 28px;
   flex: 1;
   min-height: 0;
   overflow-y: auto;

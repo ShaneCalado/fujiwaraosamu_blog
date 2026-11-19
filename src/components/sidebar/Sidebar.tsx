@@ -1,6 +1,6 @@
 // src/components/sidebar/Sidebar.tsx
 import { useState, useEffect, useRef } from 'react';
-import { Link, useSearchParams, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useSearchParams, useLocation } from 'react-router-dom';
 import { fetchAllBlogPosts } from '../../api/blogApi';
 import './Sidebar.css';
 
@@ -22,8 +22,8 @@ export default function Sidebar() {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
-  const navigate = useNavigate();
 
+  const isHomePage = location.pathname === '/';
   const selectedTag = searchParams.get('tag') || '';
 
   useEffect(() => {
@@ -99,12 +99,9 @@ export default function Sidebar() {
   const closeSidebar = () => setIsOpen(false);
 
   const handleTagSelect = (tag: string) => {
-    // Clicking the already-active tag toggles it off (shows all posts)
     const nextTag = selectedTag === tag ? '' : tag;
 
-    if (location.pathname !== '/') {
-      navigate(nextTag ? `/?tag=${encodeURIComponent(nextTag)}` : '/');
-    } else if (nextTag) {
+    if (nextTag) {
       setSearchParams({ tag: nextTag }, { replace: true });
     } else {
       setSearchParams({}, { replace: true });
@@ -136,7 +133,7 @@ export default function Sidebar() {
         </div>
 
         <div className="home-sidebar-inner">
-          {availableTags.length > 0 && (
+          {isHomePage && availableTags.length > 0 && (
             <section className="home-sidebar-section home-sidebar-section--tags">
               <h3 className="home-sidebar-heading">タグで絞り込む</h3>
               <div className="sidebar-tag-list">
