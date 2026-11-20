@@ -585,9 +585,9 @@
 }
 
 /* When there is no image/video, push the TOC bar right of the floating back button */
-.single-post-toc.no-hero-media .single-post-toc-toggle {
-  padding-left: 76px;
-  min-height: 64px;
+.single-post-toc.no-hero-media {
+  margin-top: 68px;
+  border-top: 1px solid #e2e8f0;
 }
 
 .single-post-toc-toggle {
@@ -693,11 +693,13 @@
 
 @media (max-width: 768px) {
   .single-post-toc-toggle {
+    justify-content: flex-start;
+    gap: 10px;
     padding: 12px 20px;
   }
 
-  .single-post-toc.no-hero-media .single-post-toc-toggle {
-    padding-left: 68px;
+  .single-post-toc-chevron {
+    order: -1;
   }
 
   .single-post-toc-list {
