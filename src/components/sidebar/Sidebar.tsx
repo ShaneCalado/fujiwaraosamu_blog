@@ -14,10 +14,12 @@ interface SidebarPost {
   tags?: string[];
 }
 
+const MIN_TAB_TOP = 16; // Distance in px from top of screen when scrolled down
+
 export default function Sidebar() {
   const [posts, setPosts] = useState<SidebarPost[]>([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [tabTop, setTabTop] = useState(140);
+  const [tabTop, setTabTop] = useState(MIN_TAB_TOP);
   const anchorRef = useRef<HTMLDivElement>(null);
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -44,16 +46,14 @@ export default function Sidebar() {
     };
   }, []);
 
-  // Keep mobile tab aligned with the content start, then clamped at MIN_TOP when scrolling down
+  // Keep mobile tab aligned with the content start, then clamped near the top edge when scrolling down
   useEffect(() => {
-    const MIN_TOP = 140;
-
     const updateTabPosition = () => {
       if (!anchorRef.current) return;
       const parentRect =
         anchorRef.current.parentElement?.getBoundingClientRect() ||
         anchorRef.current.getBoundingClientRect();
-      setTabTop(Math.max(MIN_TOP, parentRect.top));
+      setTabTop(Math.max(MIN_TAB_TOP, parentRect.top));
     };
 
     updateTabPosition();
@@ -63,7 +63,7 @@ export default function Sidebar() {
       window.removeEventListener('scroll', updateTabPosition);
       window.removeEventListener('resize', updateTabPosition);
     };
-  }, []);
+  }, [location.pathname]);
 
   // Lock background page scroll on mobile when the drawer is open
   useEffect(() => {
