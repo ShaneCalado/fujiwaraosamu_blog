@@ -145,6 +145,43 @@
   font-size: 1.05rem;
   text-align: left;
 
+  /* Syn Own (TCD SYN / synx) Theme & Toolbar Variables */
+  --syn-accent-dark: #064789;
+  --syn-accent-light: #00a9c7;
+
+  --color-main: var(--syn-accent-dark);
+  --color-main-light: #e6f0f8;
+  --color-main-dark: #043261;
+  --color-sub: var(--syn-accent-light);
+  --color-sub-light: #e6f7fa;
+  --color-accent: #f59e0b;
+
+  /* Syn Own Grayscale Tiers (used by synx-inline-color & table cells) */
+  --color-elight01: #ffffff;
+  --color-elight02: #f8fafc;
+  --color-elight03: #f1f5f9;
+  --color-light01: #e2e8f0;
+  --color-light02: #cbd5e1;
+  --color-light03: #94a3b8;
+  --color-dark01: #111827;
+  --color-dark02: #374151;
+  --color-dark03: #6b7280;
+
+  /* Common Named Color Swatches */
+  --color-text: #111827;
+  --color-white: #ffffff;
+  --color-base: #ffffff;
+  --color-bg: #f8fafc;
+  --color-black: #000000;
+  --color-gray: #6b7280;
+  --color-light-gray: #f3f4f6;
+  --color-red: #dc2626;
+  --color-blue: #2563eb;
+  --color-green: #16a34a;
+  --color-yellow: #eab308;
+  --color-orange: #ea580c;
+  --color-pink: #ec4899;
+
   /* WordPress Global Styles Preset Variables (used by Gutenberg inline styles) */
   --wp--preset--color--black: #000000;
   --wp--preset--color--cyan-bluish-gray: #abb8c3;
@@ -338,15 +375,89 @@
   clear: both;
 }
 
-.single-post-body h1,
-.single-post-body h2,
-.single-post-body h3,
-.single-post-body h4,
-.single-post-body h5,
+/* =========================================
+   Syn Own Heading Styles (h1 - h6)
+   ========================================= */
+.single-post-body h1 {
+  margin: 1.75em 0 0.6em;
+  font-size: 1.65rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+/* H2: Blue-to-cyan gradient bar, white left tick, rounded top-right corner */
+.single-post-body h2:not(.has-background) {
+  position: relative;
+  margin: 2.25rem 0 1.15rem;
+  padding: 0.85rem 1.25rem 0.85rem 2.25rem;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #ffffff;
+  background: linear-gradient(90deg, var(--syn-accent-dark) 0%, var(--syn-accent-light) 100%);
+  border-radius: 2px 14px 2px 2px;
+}
+
+.single-post-body h2:not(.has-background)::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 3px;
+  background-color: #ffffff;
+}
+
+/* If an editor manually picks a custom WP background color on H2/H3, keep clean spacing */
+.single-post-body h2.has-background,
+.single-post-body h3.has-background {
+  margin: 2rem 0 1rem;
+  padding: 0.65rem 1rem;
+  border-radius: 4px;
+  line-height: 1.4;
+}
+
+/* H3: Light gray bar, rounded top-right corner, gradient bottom border */
+.single-post-body h3:not(.has-background) {
+  margin: 1.85rem 0 0.95rem;
+  padding: 0.75rem 1.15rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #111827;
+  background-color: #f3f4f6;
+  border-radius: 2px 14px 0 0;
+  border-bottom: 2px solid transparent;
+  border-image: linear-gradient(90deg, var(--syn-accent-dark) 0%, var(--syn-accent-light) 100%) 1;
+}
+
+/* H4: Clean left vertical accent bar */
+.single-post-body h4 {
+  margin: 1.5rem 0 0.75rem;
+  padding: 0.2rem 0 0.2rem 0.85rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #111827;
+  border-left: 3px solid var(--syn-accent-dark);
+}
+
+/* H5 & H6: Clean subheadings */
+.single-post-body h5 {
+  margin: 1.25rem 0 0.5rem;
+  font-size: 0.98rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--syn-accent-dark);
+}
+
 .single-post-body h6 {
-  margin-top: 1.5em;
-  margin-bottom: 0.5em;
-  line-height: 1.3;
+  margin: 1rem 0 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #4b5563;
 }
 
 .single-post-body p {
@@ -408,24 +519,37 @@
 }
 
 .single-post-body thead th {
-  background-color: #f8fafc;
   font-weight: 700;
   border-bottom: 2px solid #94a3b8;
 }
 
-.single-post-body tfoot td {
+/* Only apply default gray when neither thead, tr, nor th has a custom background */
+.single-post-body
+  :where(thead:not(.has-background):not([style*="background"]))
+  :where(tr:not(.has-background):not([style*="background"]):not([bgcolor]))
+  :where(th:not(.has-background):not([style*="background"]):not([bgcolor])) {
   background-color: #f8fafc;
+}
+
+.single-post-body tfoot td {
   font-weight: 600;
   border-top: 2px solid #94a3b8;
 }
 
-.single-post-body .wp-block-table.is-style-stripes table,
-.single-post-body .wp-block-table.is-style-stripes th,
-.single-post-body .wp-block-table.is-style-stripes td {
-  border-color: #e2e8f0;
+.single-post-body
+  :where(tfoot:not(.has-background):not([style*="background"]))
+  :where(tr:not(.has-background):not([style*="background"]):not([bgcolor]))
+  :where(td:not(.has-background):not([style*="background"]):not([bgcolor])) {
+  background-color: #f8fafc;
 }
 
-.single-post-body .wp-block-table.is-style-stripes tbody tr:nth-child(odd) {
+.single-post-body .wp-block-table.is-style-stripes
+  tbody
+  tr:nth-child(odd):not(.has-background):not([style*="background"]):not([bgcolor])
+  :where(
+    td:not(.has-background):not([style*="background"]):not([bgcolor]),
+    th:not(.has-background):not([style*="background"]):not([bgcolor])
+  ) {
   background-color: #f8fafc;
 }
 
@@ -594,3 +718,46 @@
     margin: 1em auto;
   }
 }
+
+/* Syn Own / Gutenberg Font Size Classes */
+.single-post-body .has-small-font-size { font-size: 0.85em; }
+.single-post-body .has-normal-font-size,
+.single-post-body .has-medium-font-size { font-size: 1em; }
+.single-post-body .has-large-font-size { font-size: 1.25em; }
+.single-post-body .has-x-large-font-size { font-size: 1.5em; }
+.single-post-body .has-xx-large-font-size,
+.single-post-body .has-huge-font-size { font-size: 1.85em; }
+
+/* Syn Own Table Vertical Alignment */
+.single-post-body .wp-block-table.is-vertical-align-top th,
+.single-post-body .wp-block-table.is-vertical-align-top td {
+  vertical-align: top;
+}
+
+.single-post-body .wp-block-table.is-vertical-align-middle th,
+.single-post-body .wp-block-table.is-vertical-align-middle td {
+  vertical-align: middle;
+}
+
+.single-post-body .wp-block-table.is-vertical-align-bottom th,
+.single-post-body .wp-block-table.is-vertical-align-bottom td {
+  vertical-align: bottom;
+}
+
+/* Reset browser default yellow/black <mark> styles when WP uses <mark> for inline text color */
+.single-post-body mark.has-inline-color {
+  background-color: transparent;
+  color: inherit;
+}
+
+/* Ensure inner spans/marks inherit cell color unless they set their own color */
+.single-post-body .has-main-color,
+.single-post-body .has-color-main-color { color: var(--color-main); }
+.single-post-body .has-sub-color,
+.single-post-body .has-color-sub-color { color: var(--color-sub); }
+.single-post-body .has-accent-color,
+.single-post-body .has-color-accent-color { color: var(--color-accent); }
+.single-post-body .has-color-white-color { color: var(--color-white); }
+.single-post-body .has-color-black-color { color: var(--color-black); }
+.single-post-body .has-color-gray-color { color: var(--color-gray); }
+.single-post-body .has-color-red-color { color: var(--color-red); }

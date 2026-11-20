@@ -62,6 +62,12 @@ export function extractTocAndInjectIds(htmlString) {
 
   const parser = new DOMParser();
   const doc = parser.parseFromString(htmlString, 'text/html');
+  doc.querySelectorAll('[bgcolor]').forEach((el) => {
+    const bg = el.getAttribute('bgcolor')?.trim();
+    if (bg && !el.style.backgroundColor) {
+      el.style.backgroundColor = bg;
+    }
+  });
   const headings = doc.querySelectorAll('h2, h3, h4, h5, h6');
 
   const rawItems = [];
