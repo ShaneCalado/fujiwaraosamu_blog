@@ -13,8 +13,10 @@ export default function Post() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Fetch single post & scroll cleanly to the top on slug change
   useEffect(() => {
     let isMounted = true;
+    window.scrollTo(0, 0);
     setIsLoading(true);
     setError(null);
     setIsPlayingVideo(false);
@@ -66,105 +68,109 @@ export default function Post() {
   };
 
   return (
-    <article className="single-post-container">
-      {/* Floating Back Button */}
-      <Link to="/" className="single-post-back-btn">
-        ←
-      </Link>
-
-      {/* Video takes priority over static image */}
-      {post.videoId ? (
-        <div className="single-post-hero single-post-video-container">
-          {!isPlayingVideo ? (
-            <button
-              type="button"
-              className="single-post-video-facade"
-              onClick={() => setIsPlayingVideo(true)}
-              aria-label="Play video"
-            >
-              <img
-                src={`https://img.youtube.com/vi/${post.videoId}/hqdefault.jpg`}
-                alt={post.title}
-              />
-              <span className="single-post-play-btn" />
-            </button>
-          ) : (
-            <iframe
-              className="single-post-video-iframe"
-              src={`https://www.youtube.com/embed/${post.videoId}?autoplay=1`}
-              title={post.title}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          )}
-        </div>
-      ) : (
-        post.featuredMediaUrl && (
-          <div className="single-post-hero">
-            <img src={post.featuredMediaUrl} alt="Featured" />
-          </div>
-        )
-      )}
-
-      {/* Collapsible Table of Contents: expands out from bottom of hero media, or sits at top of post if no media */}
-      {hasToc && (
-        <nav
-          className={`single-post-toc ${hasHeroMedia ? 'attached-to-hero' : 'no-hero-media'} ${
-            isTocOpen ? 'is-open' : ''
-          }`}
-          aria-label="目次"
-        >
-          <button
-            type="button"
-            className="single-post-toc-toggle"
-            onClick={() => setIsTocOpen((prev) => !prev)}
-            aria-expanded={isTocOpen}
-          >
-            <span className="single-post-toc-label">目次 (クリックして展開)</span>
-            <span className="single-post-toc-chevron">{isTocOpen ? '▲' : '▼'}</span>
-          </button>
-
-          <div className="single-post-toc-drawer">
-            <div className="single-post-toc-drawer-inner">
-              <ol className="single-post-toc-list">
-                {post.toc.map((item) => (
-                  <li
-                    key={item.id}
-                    className={`single-post-toc-item level-${item.level}`}
-                    style={{ paddingLeft: `${item.indent * 20}px` }}
-                  >
-                    <a
-                      href={`#${item.id}`}
-                      className="single-post-toc-link"
-                      onClick={(e) => handleTocClick(e, item.id)}
-                    >
-                      {`${item.sectionNumber} - ${item.text}`}
-                    </a>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          </div>
-        </nav>
-      )}
-
-      {/* Applies extra padding at the top only if there is neither hero media nor a TOC */}
-      <div className={`single-post-content ${!hasHeroMedia && !hasToc ? 'no-image' : ''}`}>
+    <div className="single-post-page-wrapper">
+      <article className="single-post-container">
+        {/* 1. Post Title & Navigation at the Very Top */}
         <header className="single-post-header">
+          <div className="single-post-topbar">
+            <Link to="/" className="single-post-back-btn">
+              ← 記事一覧へ戻る
+            </Link>
+            <time className="single-post-date">{post.date}</time>
+          </div>
+
           <h1
             className="single-post-title"
             dangerouslySetInnerHTML={{ __html: post.title }}
           />
-          <time className="single-post-date">{post.date}</time>
         </header>
 
-        <div
-          className="single-post-body wp-content"
-          dangerouslySetInnerHTML={{ __html: post.content }}
-        />
+        {/* 2. Hero Media (Video takes priority over static image) */}
+        {post.videoId ? (
+          <div className="single-post-hero single-post-video-container">
+            {!isPlayingVideo ? (
+              <button
+                type="button"
+                className="single-post-video-facade"
+                onClick={() => setIsPlayingVideo(true)}
+                aria-label="Play video"
+              >
+                <img
+                  src={`https://img.youtube.com/vi/${post.videoId}/hqdefault.jpg`}
+                  alt={post.title}
+                />
+                <span className="single-post-play-btn" />
+              </button>
+            ) : (
+              <iframe
+                className="single-post-video-iframe"
+                src={`https://www.youtube.com/embed/${post.videoId}?autoplay=1`}
+                title={post.title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            )}
+          </div>
+        ) : (
+          post.featuredMediaUrl && (
+            <div className="single-post-hero">
+              <img src={post.featuredMediaUrl} alt="Featured" />
+            </div>
+          )
+        )}
 
-        {hasContactCta && <PostContactCta contactLink={contactLinkId} />}
-      </div>
-    </article>
+        {/* 3. Collapsible Table of Contents */}
+        {hasToc && (
+          <nav
+            className={`single-post-toc ${hasHeroMedia ? 'attached-to-hero' : 'no-hero-media'} ${
+              isTocOpen ? 'is-open' : ''
+            }`}
+            aria-label="目次"
+          >
+            <button
+              type="button"
+              className="single-post-toc-toggle"
+              onClick={() => setIsTocOpen((prev) => !prev)}
+              aria-expanded={isTocOpen}
+            >
+              <span className="single-post-toc-label">目次 (クリックして展開)</span>
+              <span className="single-post-toc-chevron">{isTocOpen ? '▲' : '▼'}</span>
+            </button>
+
+            <div className="single-post-toc-drawer">
+              <div className="single-post-toc-drawer-inner">
+                <ol className="single-post-toc-list">
+                  {post.toc.map((item) => (
+                    <li
+                      key={item.id}
+                      className={`single-post-toc-item level-${item.level}`}
+                      style={{ paddingLeft: `${item.indent * 20}px` }}
+                    >
+                      <a
+                        href={`#${item.id}`}
+                        className="single-post-toc-link"
+                        onClick={(e) => handleTocClick(e, item.id)}
+                      >
+                        {`${item.sectionNumber} - ${item.text}`}
+                      </a>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            </div>
+          </nav>
+        )}
+
+        {/* 4. Post Body & Contact CTA */}
+        <div className="single-post-content">
+          <div
+            className="single-post-body wp-content"
+            dangerouslySetInnerHTML={{ __html: post.content }}
+          />
+
+          {hasContactCta && <PostContactCta contactLink={contactLinkId} />}
+        </div>
+      </article>
+    </div>
   );
 }

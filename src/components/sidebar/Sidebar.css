@@ -14,7 +14,7 @@
 .home-sidebar-section {
   display: flex;
   flex-direction: column;
-  flex: 0 0 auto; /* Size naturally to content so space-between distributes gaps evenly */
+  flex: 0 0 auto;
   min-height: 0;
   margin: 0 !important;
 }
@@ -151,14 +151,18 @@
     padding: 0 !important;
   }
 
+  /* Stays fixed 12px above the bottom-right screen edge while scrolling */
   .sidebar-mobile-tab {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    position: fixed;
-    right: 0;
+    position: fixed !important;
+    top: auto !important;
+    bottom: 12px !important;
+    right: 0 !important;
+    left: auto !important;
     width: 44px;
     padding: 16px 8px;
     background-color: #ffffff;

@@ -1,34 +1,70 @@
 /* src/pages/post/Post.css */
+
 .single-post-container {
-  padding: 0; 
-  background-color: #fff; 
+  padding: 0;
+  background-color: #fff;
   border-radius: 8px;
-  overflow: hidden; 
+  overflow: hidden;
   position: relative;
 }
 
-/* Back Button floating over image/video */
+/* =========================================
+   Top Post Header (Back Button, Date, Title)
+   ========================================= */
+.single-post-header {
+  padding: 20px 24px 18px;
+  text-align: left;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.single-post-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
 .single-post-back-btn {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  z-index: 10;
+  display: inline-flex;
+  align-items: center;
   text-decoration: none;
-  color: #333;
-  font-weight: 600;
-  font-size: 0.95rem;
-  padding: 8px 12px;
-  background-color: rgba(255, 255, 255, 0.9);
-  border-radius: 6px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease;
+  color: #111827;
+  font-weight: 700;
+  font-size: 0.85rem;
+  line-height: 1.3;
+  padding: 7px 12px;
+  background-color: #eaedf1;
+  border: 1px solid #dde2e8;
+  border-radius: 8px;
+  transition: background-color 0.18s ease, border-color 0.18s ease;
 }
 
 .single-post-back-btn:hover {
-  background-color: #fff;
+  background-color: #dfe4ea;
+  border-color: #cbd5e1;
   color: #0f172a;
 }
 
+.single-post-date {
+  color: #64748b;
+  font-size: 0.88rem;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.single-post-title {
+  margin: 0 !important;
+  font-size: clamp(1.3rem, 3vw, 1.8rem);
+  font-weight: 700 !important;
+  line-height: 1.45 !important;
+  color: #0f172a;
+  word-break: break-word;
+}
+
+/* =========================================
+   Hero Media (Image / Playable Video)
+   ========================================= */
 .single-post-hero {
   width: 100%;
 }
@@ -116,27 +152,6 @@
   padding: 24px;
 }
 
-/* Pushes the text down if there is no image or video, so it doesn't collide with the back button */
-.single-post-content.no-image {
-  padding-top: 70px; 
-}
-
-.single-post-header {
-  text-align: center;
-}
-
-.single-post-title {
-  margin-bottom: 8px;
-  font-size: 2rem;
-}
-
-.single-post-date {
-  display: block;
-  color: #666;
-  margin-bottom: 32px;
-  font-size: 0.9rem;
-}
-
 /* =========================================
    Base Styles & WP Variables for Post Body
    ========================================= */
@@ -218,14 +233,11 @@
 /* =========================================
    WordPress Block Backgrounds & Borders
    ========================================= */
-
-/* Compact vertical padding for blocks with background colors (overrides WP's huge default) */
 .single-post-body .has-background {
   padding: 0.45em 0;
   box-sizing: border-box;
 }
 
-/* Remove extra top/bottom margin from headings/paragraphs nested inside a colored Group block */
 .single-post-body .has-background > h1:first-child,
 .single-post-body .has-background > h2:first-child,
 .single-post-body .has-background > h3:first-child,
@@ -242,7 +254,6 @@
   margin-bottom: 0;
 }
 
-/* Ensure blocks with border-width or border-color render a solid border even if border-style wasn't clicked */
 .single-post-body [class*="border-color"],
 .single-post-body [style*="border-width"],
 .single-post-body [style*="border-color"] {
@@ -368,7 +379,6 @@
   max-width: 50%;
 }
 
-/* Clear floats at the end of the post body so floating images never overflow */
 .single-post-body::after {
   content: '';
   display: table;
@@ -385,7 +395,6 @@
   line-height: 1.35;
 }
 
-/* H2: Blue-to-cyan gradient bar, white left tick, rounded top-right corner */
 .single-post-body h2:not(.has-background) {
   position: relative;
   margin: 2.25rem 0 1.15rem;
@@ -409,7 +418,6 @@
   background-color: #ffffff;
 }
 
-/* If an editor manually picks a custom WP background color on H2/H3, keep clean spacing */
 .single-post-body h2.has-background,
 .single-post-body h3.has-background {
   margin: 2rem 0 1rem;
@@ -418,7 +426,6 @@
   line-height: 1.4;
 }
 
-/* H3: Light gray bar, rounded top-right corner, gradient bottom border */
 .single-post-body h3:not(.has-background) {
   margin: 1.85rem 0 0.95rem;
   padding: 0.75rem 1.15rem;
@@ -432,7 +439,6 @@
   border-image: linear-gradient(90deg, var(--syn-accent-dark) 0%, var(--syn-accent-light) 100%) 1;
 }
 
-/* H4: Clean left vertical accent bar */
 .single-post-body h4 {
   margin: 1.5rem 0 0.75rem;
   padding: 0.2rem 0 0.2rem 0.85rem;
@@ -443,7 +449,6 @@
   border-left: 3px solid var(--syn-accent-dark);
 }
 
-/* H5 & H6: Clean subheadings */
 .single-post-body h5 {
   margin: 1.25rem 0 0.5rem;
   font-size: 0.98rem;
@@ -523,7 +528,6 @@
   border-bottom: 2px solid #94a3b8;
 }
 
-/* Only apply default gray when neither thead, tr, nor th has a custom background */
 .single-post-body
   :where(thead:not(.has-background):not([style*="background"]))
   :where(tr:not(.has-background):not([style*="background"]):not([bgcolor]))
@@ -575,6 +579,49 @@
   text-align: center;
 }
 
+/* Syn Own / Gutenberg Font Size Classes */
+.single-post-body .has-small-font-size { font-size: 0.85em; }
+.single-post-body .has-normal-font-size,
+.single-post-body .has-medium-font-size { font-size: 1em; }
+.single-post-body .has-large-font-size { font-size: 1.25em; }
+.single-post-body .has-x-large-font-size { font-size: 1.5em; }
+.single-post-body .has-xx-large-font-size,
+.single-post-body .has-huge-font-size { font-size: 1.85em; }
+
+/* Syn Own Table Vertical Alignment */
+.single-post-body .wp-block-table.is-vertical-align-top th,
+.single-post-body .wp-block-table.is-vertical-align-top td {
+  vertical-align: top;
+}
+
+.single-post-body .wp-block-table.is-vertical-align-middle th,
+.single-post-body .wp-block-table.is-vertical-align-middle td {
+  vertical-align: middle;
+}
+
+.single-post-body .wp-block-table.is-vertical-align-bottom th,
+.single-post-body .wp-block-table.is-vertical-align-bottom td {
+  vertical-align: bottom;
+}
+
+/* Reset browser default yellow/black <mark> styles when WP uses <mark> for inline text color */
+.single-post-body mark.has-inline-color {
+  background-color: transparent;
+  color: inherit;
+}
+
+/* Ensure inner spans/marks inherit cell color unless they set their own color */
+.single-post-body .has-main-color,
+.single-post-body .has-color-main-color { color: var(--color-main); }
+.single-post-body .has-sub-color,
+.single-post-body .has-color-sub-color { color: var(--color-sub); }
+.single-post-body .has-accent-color,
+.single-post-body .has-color-accent-color { color: var(--color-accent); }
+.single-post-body .has-color-white-color { color: var(--color-white); }
+.single-post-body .has-color-black-color { color: var(--color-black); }
+.single-post-body .has-color-gray-color { color: var(--color-gray); }
+.single-post-body .has-color-red-color { color: var(--color-red); }
+
 /* =========================================
    Collapsible Table of Contents (TOC)
    ========================================= */
@@ -584,9 +631,7 @@
   text-align: left;
 }
 
-/* When there is no image/video, push the TOC bar right of the floating back button */
 .single-post-toc.no-hero-media {
-  margin-top: 68px;
   border-top: 1px solid #e2e8f0;
 }
 
@@ -595,7 +640,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 32px;
+  padding: 14px 24px;
   background: transparent;
   border: none;
   cursor: pointer;
@@ -633,7 +678,7 @@
 .single-post-toc-list {
   list-style: none;
   margin: 0;
-  padding: 4px 32px 20px;
+  padding: 4px 24px 20px;
   border-top: 1px dashed #e2e8f0;
 }
 
@@ -692,6 +737,19 @@
 }
 
 @media (max-width: 768px) {
+  .single-post-header {
+    padding: 16px 20px 16px;
+  }
+
+  .single-post-title {
+    font-weight: 800 !important;
+    font-synthesis: weight;
+  }
+
+  .single-post-content {
+    padding: 20px;
+  }
+
   .single-post-toc-toggle {
     justify-content: flex-start;
     gap: 10px;
@@ -720,46 +778,3 @@
     margin: 1em auto;
   }
 }
-
-/* Syn Own / Gutenberg Font Size Classes */
-.single-post-body .has-small-font-size { font-size: 0.85em; }
-.single-post-body .has-normal-font-size,
-.single-post-body .has-medium-font-size { font-size: 1em; }
-.single-post-body .has-large-font-size { font-size: 1.25em; }
-.single-post-body .has-x-large-font-size { font-size: 1.5em; }
-.single-post-body .has-xx-large-font-size,
-.single-post-body .has-huge-font-size { font-size: 1.85em; }
-
-/* Syn Own Table Vertical Alignment */
-.single-post-body .wp-block-table.is-vertical-align-top th,
-.single-post-body .wp-block-table.is-vertical-align-top td {
-  vertical-align: top;
-}
-
-.single-post-body .wp-block-table.is-vertical-align-middle th,
-.single-post-body .wp-block-table.is-vertical-align-middle td {
-  vertical-align: middle;
-}
-
-.single-post-body .wp-block-table.is-vertical-align-bottom th,
-.single-post-body .wp-block-table.is-vertical-align-bottom td {
-  vertical-align: bottom;
-}
-
-/* Reset browser default yellow/black <mark> styles when WP uses <mark> for inline text color */
-.single-post-body mark.has-inline-color {
-  background-color: transparent;
-  color: inherit;
-}
-
-/* Ensure inner spans/marks inherit cell color unless they set their own color */
-.single-post-body .has-main-color,
-.single-post-body .has-color-main-color { color: var(--color-main); }
-.single-post-body .has-sub-color,
-.single-post-body .has-color-sub-color { color: var(--color-sub); }
-.single-post-body .has-accent-color,
-.single-post-body .has-color-accent-color { color: var(--color-accent); }
-.single-post-body .has-color-white-color { color: var(--color-white); }
-.single-post-body .has-color-black-color { color: var(--color-black); }
-.single-post-body .has-color-gray-color { color: var(--color-gray); }
-.single-post-body .has-color-red-color { color: var(--color-red); }

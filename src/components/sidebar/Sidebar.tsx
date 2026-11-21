@@ -1,5 +1,5 @@
 // src/components/sidebar/Sidebar.tsx
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useSearchParams, useLocation } from 'react-router-dom';
 import { fetchAllBlogPosts } from '../../api/blogApi';
 import './Sidebar.css';
@@ -14,13 +14,9 @@ interface SidebarPost {
   tags?: string[];
 }
 
-const MIN_TAB_TOP = 16; // Distance in px from top of screen when scrolled down
-
 export default function Sidebar() {
   const [posts, setPosts] = useState<SidebarPost[]>([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [tabTop, setTabTop] = useState(MIN_TAB_TOP);
-  const anchorRef = useRef<HTMLDivElement>(null);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
@@ -45,25 +41,6 @@ export default function Sidebar() {
       isMounted = false;
     };
   }, []);
-
-  // Keep mobile tab aligned with the content start, then clamped near the top edge when scrolling down
-  useEffect(() => {
-    const updateTabPosition = () => {
-      if (!anchorRef.current) return;
-      const parentRect =
-        anchorRef.current.parentElement?.getBoundingClientRect() ||
-        anchorRef.current.getBoundingClientRect();
-      setTabTop(Math.max(MIN_TAB_TOP, parentRect.top));
-    };
-
-    updateTabPosition();
-    window.addEventListener('scroll', updateTabPosition, { passive: true });
-    window.addEventListener('resize', updateTabPosition);
-    return () => {
-      window.removeEventListener('scroll', updateTabPosition);
-      window.removeEventListener('resize', updateTabPosition);
-    };
-  }, [location.pathname]);
 
   // Lock background page scroll on mobile when the drawer is open
   useEffect(() => {
@@ -111,10 +88,11 @@ export default function Sidebar() {
   };
 
   return (
-    <div ref={anchorRef} className="home-sidebar-anchor">
+    <div className="home-sidebar-anchor">
       <button
+        type="button"
         className={`sidebar-mobile-tab ${isOpen ? 'tab-open' : ''}`}
-        style={{ top: `${tabTop}px` }}
+        style={{ top: 'auto', bottom: '12px', right: 0 }}
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Toggle Sidebar"
       >
@@ -129,7 +107,9 @@ export default function Sidebar() {
       <aside className={`home-sidebar ${isOpen ? 'is-open' : ''}`}>
         <div className="sidebar-mobile-header">
           <span>記事メニュー</span>
-          <button className="sidebar-close-btn" onClick={closeSidebar}>✕</button>
+          <button type="button" className="sidebar-close-btn" onClick={closeSidebar}>
+            ✕
+          </button>
         </div>
 
         <div className="home-sidebar-inner">

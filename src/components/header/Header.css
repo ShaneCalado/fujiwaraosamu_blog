@@ -413,6 +413,11 @@
 }
 
 @media screen and (max-width: 768px) {
+  /* Hide the top banner only on mobile when viewing an article */
+  .home-header-wrapper.is-post-view {
+    display: none !important;
+  }
+
   .home-header-banner {
     height: 180px;
   }

@@ -1,13 +1,16 @@
 import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import './Header.css';
 
 export default function Header() {
   const [isContactOpen, setIsContactOpen] = useState(false);
+  const location = useLocation();
 
+  const isPostView = location.pathname.startsWith('/post');
   const toggleContact = () => setIsContactOpen((prev) => !prev);
 
   return (
-    <header className="home-header-wrapper">
+    <header className={`home-header-wrapper ${isPostView ? 'is-post-view' : ''}`}>
       <div
         className="home-header-banner"
         onClick={toggleContact}
@@ -21,10 +24,10 @@ export default function Header() {
           }
         }}
       >
-        <img 
-          src="/images/header_image.webp" 
-          alt="Office Osamu Fujiwara" 
-          className="home-header-image" 
+        <img
+          src="/images/header_image.webp"
+          alt="Office Osamu Fujiwara"
+          className="home-header-image"
         />
         <h1 className="home-header-title">宝塚の行政書士ブログ</h1>
       </div>
