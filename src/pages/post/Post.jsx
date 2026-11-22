@@ -74,7 +74,7 @@ export default function Post() {
         <header className="single-post-header">
           <div className="single-post-topbar">
             <Link to="/" className="single-post-back-btn">
-              ← 記事一覧へ戻る
+              ←
             </Link>
             <time className="single-post-date">{post.date}</time>
           </div>
