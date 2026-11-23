@@ -29,14 +29,54 @@ export default function Header() {
           alt="Office Osamu Fujiwara"
           className="home-header-image"
         />
+
+        {/* Top-Left Blog Title Overlay */}
+        <h1 className="home-header-title">宝塚の行政書士ブログ</h1>
+
+        {/* Bottom-Left Office Info Overlay */}
         <div className="home-header-info">
-          <div>HP→行政書士藤原修事務所</div>
-          <div>代表者 藤原 修</div>
-          <div>所在地 兵庫県宝塚市すみれガ丘１丁目7-1-509号</div>
-          <div>TEL 0797-90-2776 (受付時間9時〜18時)</div>
-          <div>FAX 0797-90-2784 (24時間受付)</div>
-          <div>mail→お問い合わせ</div>
-          <div>休業日 土日・祝日・年末年始</div>
+          <div className="home-header-office-row">
+            <img
+              src="/images/logo.png"
+              alt="行政書士徽章"
+              className="home-header-badge"
+            />
+            <span className="home-header-office-name">行政書士藤原修事務所</span>
+          </div>
+
+          <div className="home-header-details">
+            <div className="home-header-detail-line">
+              <span className="home-header-detail-label">所在地</span>
+              <span className="home-header-detail-sep">:</span>
+              <span className="home-header-detail-val">
+                兵庫県宝塚市すみれガ丘1丁目7-1-509
+              </span>
+            </div>
+
+            <div className="home-header-detail-line">
+              <span className="home-header-detail-label is-latin">TEL</span>
+              <span className="home-header-detail-sep">:</span>
+              <a
+                href="tel:0797-90-2776"
+                className="home-header-banner-link home-header-tel-link"
+                onClick={(e) => e.stopPropagation()}
+              >
+                0797-90-2776
+              </a>
+            </div>
+
+            <div className="home-header-detail-line">
+              <span className="home-header-detail-label is-latin">MAIL</span>
+              <span className="home-header-detail-sep">:</span>
+              <a
+                href="mailto:office@fujiwaraosamu.com"
+                className="home-header-banner-link home-header-mail-link"
+                onClick={(e) => e.stopPropagation()}
+              >
+                お問い合わせ
+              </a>
+            </div>
+          </div>
         </div>
       </div>
 

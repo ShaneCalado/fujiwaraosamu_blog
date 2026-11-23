@@ -275,10 +275,11 @@
 }
 
 /* ==========================================
-   Banner Image, Bottom-Left Info & Contact Dropdown
+   Banner Image, Top Title & Bottom-Left Office Box
 ========================================== */
 .home-header-wrapper {
   width: 100%;
+  box-sizing: border-box;
   border-radius: 8px;
   overflow: hidden;
   margin-bottom: 20px;
@@ -290,7 +291,7 @@
 .home-header-banner {
   position: relative;
   width: 100%;
-  height: 250px;
+  height: 270px;
   overflow: hidden;
   margin: 0 !important;
   border-radius: 0 !important;
@@ -301,24 +302,122 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 35%;
   display: block;
 }
 
-.home-header-info {
+/* Top-Left Slate-Blue Title Bar */
+.home-header-title {
   position: absolute;
-  bottom: 0;
-  left: 0;
+  top: 10px;
+  left: 8px;
+  margin: 0 !important;
+  padding: 10px 42px;
+  font-size: clamp(1.75rem, 3.2vw, 2.65rem);
+  font-weight: 700;
+  color: #ffffff;
+  background-color: rgba(45, 78, 112, 0.78);
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+  white-space: nowrap;
+  border-radius: 4px;
+}
+
+/* Bottom-Left Slate-Blue Office Info Box */
+.home-header-info {
+  --badge-size: 34px;
+  --badge-gap: 8px;
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
   margin: 0;
-  padding: 10px 16px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  line-height: 1.45;
+  padding: 10px 26px 10px 12px;
   text-align: left;
   color: #ffffff;
-  background-color: rgba(30, 41, 59, 0.55);
-  border-radius: 0 12px 0 0;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
-  box-shadow: 2px -2px 8px rgba(0, 0, 0, 0.15);
+  background-color: rgba(32, 63, 98, 0.78);
+  border-radius: 4px;
+}
+
+.home-header-office-row {
+  display: flex;
+  align-items: center;
+  gap: var(--badge-gap);
+  margin-bottom: 3px;
+}
+
+.home-header-badge {
+  width: var(--badge-size);
+  height: var(--badge-size);
+  object-fit: contain;
+  flex-shrink: 0;
+  display: block;
+}
+
+.home-header-office-name {
+  font-size: 1.35rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1.25;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+/* Indented Address, TEL, and MAIL rows aligned flush with office name */
+.home-header-details {
+  display: grid;
+  grid-template-columns: max-content auto 1fr;
+  row-gap: 2px;
+  padding-left: calc(var(--badge-size) + var(--badge-gap));
+  font-size: 0.92rem;
+  font-weight: 400;
+  line-height: 1.42;
+}
+
+.home-header-detail-line {
+  display: contents;
+}
+
+.home-header-detail-label {
+  text-align: left;
+  white-space: nowrap;
+}
+
+.home-header-detail-label.is-latin {
+  letter-spacing: 0.16em;
+}
+
+.home-header-detail-sep {
+  padding: 0 8px 0 6px;
+  white-space: pre;
+}
+
+.home-header-detail-val {
+  white-space: nowrap;
+}
+
+/* Clickable TEL & MAIL Links inside Banner */
+.home-header-banner-link {
+  color: #ffffff !important;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.home-header-banner-link:hover {
+  opacity: 0.85;
+}
+
+.home-header-tel-link {
+  text-decoration: none;
+}
+
+.home-header-tel-link:hover {
+  text-decoration: underline;
+}
+
+.home-header-mail-link {
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 /* ==========================================
@@ -333,7 +432,7 @@
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* Puts the arrow on the far left */
+  justify-content: flex-start;
   padding: 6px 16px;
   background: transparent;
   border: none;
@@ -426,27 +525,61 @@
 }
 
 @media screen and (max-width: 768px) {
+  body {
+    overflow-x: clip;
+  }
+
+  /* Full-bleed edge-to-edge width on mobile with square top corners */
+  .home-header-wrapper {
+    width: 100vw;
+    max-width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-radius: 0 0 8px 8px;
+  }
+
   /* Hide the top banner only on mobile when viewing an article */
   .home-header-wrapper.is-post-view {
     display: none !important;
   }
 
   .home-header-banner {
-    height: 185px;
+    height: 190px;
+  }
+
+  .home-header-title {
+    top: 6px;
+    left: 6px;
+    font-size: 1.25rem;
+    padding: 5px 16px;
+    border-radius: 4px !important;
   }
 
   .home-header-info {
-    bottom: 0;
-    top: auto;
-    left: 0;
-    max-width: none;
-    white-space: nowrap;
-    padding: 6px 10px;
-    font-size: 0.65rem;
-    line-height: 1.34;
-    transform: scale(0.91);
+    --badge-size: 24px;
+    --badge-gap: 6px;
+    bottom: 6px;
+    left: 6px;
+    padding: 6px 12px 6px 8px;
+    transform: scale(0.86);
     transform-origin: bottom left;
-    border-radius: 0 10px 0 0;
+    border-radius: 4.65px !important; /* Visually matches 4px after 0.86x scale */
+  }
+
+  .home-header-office-name {
+    font-size: 0.95rem;
+  }
+
+  .home-header-details {
+    font-size: 0.68rem;
+    line-height: 1.35;
+  }
+
+  .home-header-detail-sep {
+    padding: 0 5px 0 4px;
   }
 
   .home-header-contact-toggle {
