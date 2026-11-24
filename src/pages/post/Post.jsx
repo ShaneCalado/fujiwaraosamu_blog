@@ -3,6 +3,9 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { fetchSingleBlogPostBySlug } from '../../api/blogApi';
 import PostContactCta from '../../components/contact/Contact';
+
+// Import ONLY editor_front.css (do NOT import single.css or index.css)
+import '../../themes/syn_own/css/editor_front.css';
 import './Post.css';
 
 export default function Post() {
@@ -162,9 +165,9 @@ export default function Post() {
         )}
 
         {/* 4. Post Body & Contact CTA */}
-        <div className="single-post-content">
+        <div className="single-post-content entry__main">
           <div
-            className="single-post-body wp-content"
+            className="single-post-body post-content wp-content entry-content"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
 
