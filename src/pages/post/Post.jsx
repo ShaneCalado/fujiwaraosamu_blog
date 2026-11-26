@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { fetchSingleBlogPostBySlug } from '../../api/blogApi';
-import PostContactCta from '../../components/contact/Contact';
 
 // Import ONLY editor_front.css (do NOT import single.css or index.css)
 import '../../themes/syn_own/css/editor_front.css';
@@ -53,14 +52,6 @@ export default function Post() {
 
   const hasHeroMedia = Boolean(post.videoId || post.featuredMediaUrl);
   const hasToc = post.toc && post.toc.length > 0;
-
-  // Normalize contact_link whether blogApi maps it to post.contactLink or leaves it on post.acf
-  const rawContactLink = post.contactLink ?? post.acf?.contact_link;
-  const contactLinkId =
-    typeof rawContactLink === 'object' && rawContactLink !== null
-      ? Number(rawContactLink.value) || 0
-      : Number(rawContactLink) || 0;
-  const hasContactCta = contactLinkId > 0;
 
   const handleTocClick = (e, id) => {
     e.preventDefault();
@@ -164,14 +155,12 @@ export default function Post() {
           </nav>
         )}
 
-        {/* 4. Post Body & Contact CTA */}
+        {/* 4. Post Body */}
         <div className="single-post-content entry__main">
           <div
             className="single-post-body post-content wp-content entry-content"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
-
-          {hasContactCta && <PostContactCta contactLink={contactLinkId} />}
         </div>
       </article>
     </div>
